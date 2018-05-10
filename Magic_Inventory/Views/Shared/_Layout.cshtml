@@ -1,4 +1,10 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@using Magic_Inventory.Models
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -29,11 +35,21 @@
                 <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">Magic_Inventory</a>
             </div>
             <div class="navbar-collapse collapse">
+                @if (SignInManager.IsSignedIn(User))
+                            {
+
+                                var x = UserManager.GetUserAsync(User);
+                                var y = UserManager.GetUsersInRoleAsync("Owner");
+                                var i = User.IsInRole("Owner");
+                                if (!i)
+                                {
                 <ul class="nav navbar-nav">
                     <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
                 </ul>
+                            }
+                }
                 @await Html.PartialAsync("_LoginPartial")
             </div>
         </div>
