@@ -28,6 +28,9 @@
             <td>
                @Html.DisplayFor(modelItem => item.Product.Price)
             </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.ProductID">Edit</a> 
+            </td>
         </tr>
 }
     </tbody>

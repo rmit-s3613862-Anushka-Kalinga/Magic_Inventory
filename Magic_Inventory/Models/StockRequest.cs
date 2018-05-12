@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -15,6 +16,8 @@ namespace Magic_Inventory.Models
         public int ProductID { get; set; }
         public Product Product { get; set; }
 
+        [Required(ErrorMessage = "Quantity is required")]
+        [Range(1, 1000, ErrorMessage = "Quantity must be between 1 and 1000")]
         public int Quantity { get; set; }
     }
 }
