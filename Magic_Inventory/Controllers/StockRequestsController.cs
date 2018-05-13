@@ -52,8 +52,14 @@ namespace Magic_Inventory.Controllers
             //Get Store Name and Product Name in database
             var storeName = _context.Store.SingleOrDefaultAsync(s => s.StoreID == StoreID);
             var productName = _context.Product.SingleOrDefaultAsync(o => o.ProductID == ProductID);
+
+            var currentStockForSore =  _context.StoreInventory.Where(s => s.StoreID == StoreID );
+            var currentStock =await currentStockForSore.SingleOrDefaultAsync(o => o.ProductID == ProductID);
+
+
             ViewBag.StoreName = storeName.Result.Name;
             ViewBag.ProductName = productName.Result.Name;
+            ViewBag.CurrentStock = currentStock.StockLevel;
             return View();
         }
 
