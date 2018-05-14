@@ -75,6 +75,8 @@ namespace Magic_Inventory
 
             app.UseAuthentication();
 
+            app.UseStatusCodePages();
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

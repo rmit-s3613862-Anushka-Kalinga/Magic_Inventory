@@ -43,6 +43,7 @@ namespace Magic_Inventory.Controllers
                 return NotFound();
             }
             // ViewData["ProductID"] = new SelectList(_context.Product, "ProductID", "Name", ownerInventory.ProductID);
+            ViewBag.ProductName = ownerInventory.Product.Name;
             return View(ownerInventory);
         }
 
