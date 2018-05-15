@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Magic_Inventory.Controllers
 {
-    [Authorize(Roles = RoleConstants.FranchiseHolderRole)]
+   
     public class StoreInventoriesController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -20,14 +20,29 @@ namespace Magic_Inventory.Controllers
             _context = context;
             _userManager = userManager;
         }
+        [Authorize(Roles = RoleConstants.FranchiseHolderRole)]
         public async Task<IActionResult> Index()
         {
             var user =await _userManager.GetUserAsync(User);
             if (user == null) {
                 return NotFound();
             }
+            
             var storeInventoryList = _context.StoreInventory.Include(s => s.Store).Include(o => o.Product).Where(s => s.StoreID == user.StoreID);
             return View( await storeInventoryList.ToListAsync());
+        }
+
+        public async Task<IActionResult> ShowStoreInventory(int? id)
+        {
+
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var storeProducts = _context.StoreInventory.Include(o => o.Product).Where(s => s.StoreID == id);
+
+            return View(storeProducts);
         }
     }
 }
