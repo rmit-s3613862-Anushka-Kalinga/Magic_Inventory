@@ -14,11 +14,11 @@ namespace Magic_Inventory.Controllers
     public class StockRequestsController : Controller
     {
         private readonly ApplicationDbContext _context;
-        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly UserManager<ApplicationUser> _userManager;     
 
         public StockRequestsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager) {
             _context = context;
-            _userManager = userManager;
+            _userManager = userManager;            
         }
 
         
@@ -43,12 +43,11 @@ namespace Magic_Inventory.Controllers
         public async Task<IActionResult> Create(int StoreID, int ProductID) {
 
             var _user = await _userManager.GetUserAsync(User);
-            // var x = _context.OwnerInventory.Include(s => s.StockLevel);
+            
             // check fanchise holder valid to see own data
             if (StoreID != _user.StoreID) {
                 return NotFound();
-            }
-            // var stockRequest = await _context.StockRequest.Include(s => s.Store).SingleOrDefaultAsync(s => s.StoreID == StoreID);
+            }            
             //Get Store Name and Product Name in database
             var storeName = _context.Store.SingleOrDefaultAsync(s => s.StoreID == StoreID);
             var productName = _context.Product.SingleOrDefaultAsync(o => o.ProductID == ProductID);
@@ -79,29 +78,48 @@ namespace Magic_Inventory.Controllers
         }
 
         public async Task<IActionResult> ProcessStockRequest(int? id) {
+
             if (id == null) {
                 return NotFound();
             }
             var stockRequestProcess =await _context.StockRequest.Include(s => s.Store).Include(o => o.Product).SingleOrDefaultAsync( r => r.StockRequestID == id);
-
-            //Get stock level using StoreID and ProductId
-            // var currentStockForSore = _context.StoreInventory.Where(s => s.StoreID == stockRequestProcess.StoreID);
-            //var currentStock = await currentStockForSore.SingleOrDefaultAsync(o => o.ProductID == stockRequestProcess.ProductID);
-            //var stockLevel = currentStock.StockLevel;
-
-            var ownerInventoryProduct = await _context.OwnerInventory.SingleOrDefaultAsync(o => o.ProductID == stockRequestProcess.ProductID);
-
-            var ownerStockLevel = ownerInventoryProduct.StockLevel;
-
+           
+           // storeID = stockRequestProcess.StoreID;
+           // productID = stockRequestProcess.ProductID;
+            //Get owner stock level using ProductId     
+            var ownerStockLevel = await GetOwnerStockLevel(stockRequestProcess.ProductID);
+            var stockRequestQuantity = stockRequestProcess.Quantity;
+           // storeStockLevel =await GetStockLevel(storeID, productID);
             ViewBag.StockLevel = ownerStockLevel;
+            ViewBag.Avalability = CheckStockAvalability(ownerStockLevel, stockRequestQuantity);
 
-            ViewBag.Avalability = CheckStockAvalability(ownerStockLevel, stockRequestProcess.Quantity);
-
+           
             return View(stockRequestProcess);
         }
 
-        public async Task<IActionResult> StockRequestApproved() {
+        public async Task<IActionResult> StockRequestApproved(int? id) {
 
+            var stockRequestProcess = await _context.StockRequest.Include(s => s.Store).Include(o => o.Product).SingleOrDefaultAsync(r => r.StockRequestID == id);
+            var stockRequestProductID = stockRequestProcess.ProductID;
+            var stockRequestStoreID = stockRequestProcess.StoreID;
+            var ownerInventoryProduct = await _context.OwnerInventory.SingleOrDefaultAsync(o => o.ProductID == stockRequestProductID);
+
+            var ownerStockLevel = ownerInventoryProduct.StockLevel;
+            var storeStockLevel = await GetStockLevel(stockRequestProcess.StoreID, stockRequestProcess.ProductID);
+            var stockRequestQ = stockRequestProcess.Quantity;
+
+            if (CheckStockAvalability(ownerStockLevel,stockRequestQ)) {               
+
+                var storeFilterResults = _context.StoreInventory.Where(s => s.StoreID == stockRequestStoreID);
+                var storeProductResult = await storeFilterResults.SingleOrDefaultAsync(o => o.ProductID == stockRequestProductID);
+
+                if (ownerInventoryProduct != null) {
+                    ownerInventoryProduct.StockLevel = (ownerStockLevel - stockRequestQ);
+                    storeProductResult.StockLevel = (storeStockLevel + stockRequestQ);
+                    _context.StockRequest.Remove(stockRequestProcess);
+                    await _context.SaveChangesAsync();
+                }
+            }
 
             return RedirectToAction(nameof(Index));
         }
@@ -116,13 +134,22 @@ namespace Magic_Inventory.Controllers
         }
 
         //Check the stock availability in OwnerInventory
-        private bool CheckStockAvalability(int currentStockLevel, int quantityRequest) {
+        private bool CheckStockAvalability(int ownerCurrentStockLevel, int quantityRequest) {
             var avalability = false;
-            if (currentStockLevel >= quantityRequest) {
+            if (ownerCurrentStockLevel >= quantityRequest) {
                 return avalability = true;
             }
 
             return avalability;
         }
+
+        //Return owner stock level for given productID
+        private async Task<int> GetOwnerStockLevel(int productID) {
+            var ownerInventory = await _context.OwnerInventory.SingleOrDefaultAsync(o => o.ProductID == productID);
+            return ownerInventory.StockLevel;
+        }
+
+
+        
     }
 }
