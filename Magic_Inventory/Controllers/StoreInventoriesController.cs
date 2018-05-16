@@ -40,7 +40,7 @@ namespace Magic_Inventory.Controllers
                 return NotFound();
             }
 
-            var storeProducts = _context.StoreInventory.Include(o => o.Product).Where(s => s.StoreID == id);
+            var storeProducts =   _context.StoreInventory.Include(o => o.Product).Where(s => s.StoreID == id);
 
             return View(storeProducts);
         }

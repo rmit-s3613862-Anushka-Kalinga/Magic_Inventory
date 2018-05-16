@@ -16,7 +16,7 @@ namespace Magic_Inventory.Data
             
             var roleManger = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
-            var roles = new[] { RoleConstants.OwnerRole, RoleConstants.FranchiseHolderRole};
+            var roles = new[] { RoleConstants.OwnerRole, RoleConstants.FranchiseHolderRole,RoleConstants.CustomerRole};
 
             foreach (var role in roles)
             {
@@ -34,6 +34,8 @@ namespace Magic_Inventory.Data
             await EnsureUserHasRole(userManager, "franchisemagicNorth@gmail.com", RoleConstants.FranchiseHolderRole);
             await EnsureUserHasRole(userManager, "franchisemagicWEST@gmail.com", RoleConstants.FranchiseHolderRole);
             await EnsureUserHasRole(userManager, "franchisemagicSOUTH@gmail.com", RoleConstants.FranchiseHolderRole);
+            await EnsureUserHasRole(userManager, "c1@sys.com", RoleConstants.CustomerRole);//Password :c1
+            await EnsureUserHasRole(userManager, "f1@sys.com", RoleConstants.FranchiseHolderRole);//Password :f1 store owner for storeID: 1
 
         }      
 

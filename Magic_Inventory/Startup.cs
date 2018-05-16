@@ -44,8 +44,12 @@ namespace Magic_Inventory
                 googleOptions.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
             });
 
-            services.AddIdentity<ApplicationUser, IdentityRole>()
-                .AddEntityFrameworkStores<ApplicationDbContext>()
+            services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+            {
+                options.Password.RequiredLength = 2;
+                options.Password.RequireDigit = options.Password.RequireNonAlphanumeric =
+                options.Password.RequireUppercase = options.Password.RequireLowercase = false;
+            }).AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
             // Add application services.
@@ -67,8 +71,6 @@ namespace Magic_Inventory
             {
                 app.UseExceptionHandler("/Home/Error");
             }
-
-            //Refered from Mathew Bloger week 8 
             app.UseRewriter(new RewriteOptions().AddRedirectToHttps());
 
             app.UseStaticFiles();
