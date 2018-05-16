@@ -1,0 +1,52 @@
+﻿@model Magic_Inventory.Models.StockRequest
+
+<div>
+    <h4>StockRequest</h4>
+    <hr />
+    <dl class="dl-horizontal">
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Product)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Product.Name)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Store)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Store.Name)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Quantity)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Quantity)
+        </dd>
+        <dt>
+            <label>Current Stock Level</label>
+        </dt>
+        <dd>
+            @ViewBag.StockLevel          
+        </dd>
+        <dt>
+            <label>Accept Request</label>
+        </dt>
+        <dd>
+
+            @if (@ViewBag.Avalability == true)
+            {
+            <a asp-action="StockRequestApproved" asp-route-id="@Model.StockRequestID">Stock Request Approved</a> 
+            }
+            else { 
+            <label>
+                You haven't got enough stock for accept this request -
+                @Html.ActionLink("Refill Stock", "Edit", "OwnerInventories", new {id = Model.ProductID})
+            </label>
+            }
+        </dd>
+    </dl>
+</div>
+<div>    
+    <a asp-action="Index">Back to List</a>
+</div>
