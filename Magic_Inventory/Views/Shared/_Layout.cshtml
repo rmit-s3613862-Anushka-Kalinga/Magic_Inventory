@@ -1,5 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using Magic_Inventory.Models
+@using Magic_Inventory.Data
 
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
@@ -33,23 +34,34 @@
                     <span class="icon-bar"></span>
                 </button>
                 <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">Magic_Inventory</a>
-            </div>
+            </div>            
             <div class="navbar-collapse collapse">
                 @if (SignInManager.IsSignedIn(User))
-                            {
+                {
 
-                                var x = UserManager.GetUserAsync(User);
-                                var y = UserManager.GetUsersInRoleAsync("Owner");
-                                var i = User.IsInRole("Owner");
-                                if (i)
-                                {
-                <ul class="nav navbar-nav">
-                    <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
-                </ul>
+                    // var x = UserManager.GetUserAsync(User);
+                    // var y = UserManager.GetUsersInRoleAsync("Owner");
+                    // var i = User.IsInRole("Owner");
+                    if (User.IsInRole(RoleConstants.OwnerRole))
+                    {
+                                    <ul class="nav navbar-nav">
+                                        <li><a asp-area="" asp-controller="OwnerInventories" asp-action="Index">Inventory List</a></li>
+                                        <li><a asp-area="" asp-controller="StockRequests" asp-action="Index">Stock Requests</a></li>
+                                        <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
+                                    </ul>
               
-                            }
+                     }
+                     if (User.IsInRole(RoleConstants.FranchiseHolderRole))
+                    {
+                                    <ul class="nav navbar-nav">
+                                       
+                                        <li><a asp-area="" asp-controller="StoreInventories" asp-action="Index">Inventory List</a></li>
+                                        <li><a asp-area="" asp-controller="StockRequests" asp-action="CreateNewItemRequest">New Item Requests</a></li>
+                                        <li><a asp-area="" asp-controller="StockRequests" asp-action="StoreStockRequests">Stock Requests</a></li>
+                                        <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
+                                    </ul>
+              
+                     }
                 }
                 @await Html.PartialAsync("_LoginPartial")
             </div>

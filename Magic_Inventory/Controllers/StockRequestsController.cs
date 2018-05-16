@@ -21,7 +21,7 @@ namespace Magic_Inventory.Controllers
             _userManager = userManager;            
         }
 
-        
+        [Authorize(Roles =RoleConstants.OwnerRole)]
         public async Task<IActionResult> Index()
         {
             var stockRequestsList =_context.StockRequest.Include(s => s.Store).Include(o => o.Product);
@@ -122,6 +122,17 @@ namespace Magic_Inventory.Controllers
             }
 
             return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> CreateNewItemRequest() {
+            var _user = await _userManager.GetUserAsync(User);
+            var ownerProductList =await _context.OwnerInventory.ToListAsync();
+            var storeProductList =  _context.StoreInventory.Include(o => o.Product).Where(s => s.StoreID == _user.StoreID);
+
+            var newProductsList = ownerProductList.RemoveAll(x => !storeProductList.Any(y => y.ProductID == x.ProductID));
+
+            ViewBag.NewList = newProductsList;
+            return View();
         }
 
         //Get stock level using StoreID and ProductId
