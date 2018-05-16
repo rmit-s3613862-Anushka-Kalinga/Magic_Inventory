@@ -65,11 +65,10 @@
                     if (User.IsInRole(RoleConstants.CustomerRole))
                     {
                                     <ul class="nav navbar-nav">
-                                       
+
                                         <li><a asp-area="" asp-controller="Customers" asp-action="Index">Product List</a></li>
-                                        @*<li><a asp-area="" asp-controller="StockRequests" asp-action="CreateNewItemRequest">New Item Requests</a></li>
-                                        <li><a asp-area="" asp-controller="StockRequests" asp-action="StoreStockRequests">Stock Requests</a></li>*@
-                                        <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
+                                        <li><a asp-area="" asp-controller="Carts" asp-action="Index">Shopping cart</a></li>
+                                        <li><a asp-area="" asp-controller="Carts" asp-action="OrderHistory">Order history</a></li>                                        
                                     </ul>
               
                      }

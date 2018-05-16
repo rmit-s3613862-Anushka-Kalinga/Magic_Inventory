@@ -26,6 +26,8 @@ namespace Magic_Inventory.Data
         }
 
 
+        public DbSet<Magic_Inventory.Models.Cart> Cart { get; set; }
+
         public DbSet<Magic_Inventory.Models.Product> Product { get; set; }
 
         public DbSet<Magic_Inventory.Models.Store> Store { get; set; }
@@ -34,9 +36,9 @@ namespace Magic_Inventory.Data
 
         public DbSet<Magic_Inventory.Models.StockRequest> StockRequest { get; set; }
 
-        public DbSet<Magic_Inventory.Models.OrderDetail> OrderDetail { get; set; }
+        public DbSet<Magic_Inventory.Models.Cart> OrderDetail { get; set; }
 
-        public DbSet<Magic_Inventory.Models.CustomerOrder> CustomerOrder { get; set; }
+        public DbSet<Magic_Inventory.Models.OrderHistory> CustomerOrder { get; set; }
 
         public DbSet<Magic_Inventory.Models.StoreInventory> StoreInventory { get; set; }
     }

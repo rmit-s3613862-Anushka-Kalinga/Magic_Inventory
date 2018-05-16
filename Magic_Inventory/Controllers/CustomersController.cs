@@ -12,22 +12,72 @@ using Microsoft.AspNetCore.Authorization;
 namespace Magic_Inventory.Controllers
 {
     [Authorize(Roles = RoleConstants.CustomerRole)]
-    public class Customers : Controller
+    public class CustomersController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public Customers(ApplicationDbContext context)
+        public CustomersController(ApplicationDbContext context)
         {
             _context = context;
         }
 
         // GET: Customers
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchName,string store)
         {
-            var applicationDbContext = _context.StoreInventory.Include(s => s.Product).Include(s => s.Store);
+            ViewData["searchName"] = "";
+            ViewData["store"] = "";
+
+            var applicationDbContext = _context.StoreInventory.Include(s => s.Product).Include(m => m.Store);
+            if (!String.IsNullOrEmpty(searchName))
+            {
+                ViewData["searchName"] = searchName;
+                if (!String.IsNullOrEmpty(store))
+                {
+                    ViewData["store"] = store;
+                    var applicationDbContext3 = _context.StoreInventory.Include(s => s.Product).Include(m => m.Store).Where(s => s.Product.Name.Contains(searchName)).Where(h=>h.Store.Name == store);
+                    return View(await applicationDbContext3.ToListAsync());
+                }
+                
+                var applicationDbContext2 = _context.StoreInventory.Include(s => s.Product).Include(m => m.Store).Where(s => s.Product.Name.Contains(searchName));
+                return View(await applicationDbContext2.ToListAsync());
+            }
+            if (!String.IsNullOrEmpty(store))
+            {
+                ViewData["store"] = store;
+                var applicationDbContext2 = _context.StoreInventory.Include(s => s.Product).Include(m => m.Store).Where(s => s.Store.Name == store);
+                return View(await applicationDbContext2.ToListAsync());
+            }
+
             return View(await applicationDbContext.ToListAsync());
         }
 
+        public async Task<IActionResult> AddToCart(int? Quantity,int? ProductID, int? StoreID)
+        {
+            if (ProductID == null || StoreID == null || Quantity == null)
+            {
+                return NotFound();
+            }
+            var temp = _context.Cart.Where(z => z.UserName == User.Identity.Name.ToString()).Where(c => c.ProductID == (int)ProductID).Where(m => m.StoreID == StoreID).SingleOrDefault();
+            if (temp == null)
+            {
+                var cartItem = new Cart();
+                cartItem.StoreID = (int)StoreID;
+                cartItem.ProductID = (int)ProductID;
+                cartItem.Quantity = (int)Quantity;
+                cartItem.UserName = User.Identity.Name.ToString();
+                cartItem.Price = await _context.Product.Where(c => c.ProductID == (int)ProductID).Select(c => c.Price).SingleOrDefaultAsync();
+                cartItem.CartEntryDate = DateTime.Today;
+                _context.Cart.Add(cartItem);                
+            }
+            else
+            {
+                temp.Quantity += (int)Quantity;
+            }
+            var reduceTemp = _context.StoreInventory.Where(p => p.ProductID == (int)ProductID).Where(m => m.StoreID == (int)StoreID).SingleOrDefault();
+            reduceTemp.StockLevel = reduceTemp.StockLevel - (int)Quantity;
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
         // GET: Customers/Details/5
         public async Task<IActionResult> Details(int? id)
         {
