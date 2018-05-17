@@ -21,9 +21,33 @@ namespace Magic_Inventory.Controllers
         }
 
         // GET: Carts
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? cartID,String val)
         {
             ViewData["CardV"] = CreditCardVerified;
+            Cart newQuantity = new Cart();
+            if (! String.IsNullOrEmpty(val))
+                if (cartID != null)
+                {
+                    try
+                    {
+                        newQuantity = _context.Cart.Where(s => s.CartID == cartID).Single();
+                    }
+                    catch
+                    {
+                        var applicationDbContext2 = _context.Cart.Include(c => c.Product).Include(c => c.Store);
+                        return View(await applicationDbContext2.ToListAsync());
+                    }
+                    if (val.Equals("Plus"))
+                        newQuantity.Quantity++;
+                    else if (val.Equals("Minus"))
+                        newQuantity.Quantity--;
+                    if (newQuantity.Quantity <= 0)
+                        _context.Cart.Remove(newQuantity);
+                    else
+                        _context.Update(newQuantity);
+                    _context.SaveChanges();
+                    val = "";
+                }
             var applicationDbContext = _context.Cart.Include(c => c.Product).Include(c => c.Store);
             return View(await applicationDbContext.ToListAsync());
         }
@@ -196,7 +220,7 @@ namespace Magic_Inventory.Controllers
         }
 
         // GET: Carts/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> DeleteItem(int? id)
         {
             if (id == null)
             {
@@ -218,10 +242,11 @@ namespace Magic_Inventory.Controllers
         // POST: Carts/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int CartID)
         {
-            var cart = await _context.Cart.SingleOrDefaultAsync(m => m.CartID == id);
-            _context.Cart.Remove(cart);
+            var cart = await _context.Cart.SingleOrDefaultAsync(m => m.CartID == CartID);
+            if (cart != null)
+                _context.Cart.Remove(cart);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
