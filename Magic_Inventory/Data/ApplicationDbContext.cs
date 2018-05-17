@@ -25,6 +25,7 @@ namespace Magic_Inventory.Data
             builder.Entity<StoreInventory>().HasKey(x => new { x.StoreID, x.ProductID });
         }
 
+        public DbSet<Magic_Inventory.Models.OrderHistory> OrderHistory { get; set; }
 
         public DbSet<Magic_Inventory.Models.Cart> Cart { get; set; }
 
