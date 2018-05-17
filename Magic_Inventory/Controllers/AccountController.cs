@@ -220,6 +220,11 @@ namespace Magic_Inventory.Controllers
             ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
             {//TODO
+                var userCheck = await _userManager.FindByNameAsync(model.Email); 
+                if (userCheck != null) {
+                    ViewBag.userExistError = "User Already Registered to the System ";
+                    return View(model);
+                }
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email, StoreID = (model.StoreID < 1 || model.StoreID > 5) ? null : model.StoreID };
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
@@ -311,7 +316,14 @@ namespace Magic_Inventory.Controllers
                 {
                     throw new ApplicationException("Error loading external login information during confirmation.");
                 }
-               //Add StoreID to user
+                //Check user Exists in Database 
+                var userCheck = await _userManager.FindByNameAsync(model.Email);
+                if (userCheck != null)
+                {
+                    ViewBag.userExistError = "User Already Registered to the System ";
+                    return View(nameof(ExternalLogin), model);
+                }
+                //Add StoreID to user
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email, StoreID = (model.StoreID < 1 || model.StoreID > 5) ? null : model.StoreID };
                 var result = await _userManager.CreateAsync(user);
                 if (result.Succeeded)

@@ -19,7 +19,7 @@ namespace Magic_Inventory
 
             var host = BuildWebHost(args);
             
-            using (var scope = host.Services.CreateScope())
+          /*  using (var scope = host.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
                 try
@@ -31,7 +31,7 @@ namespace Magic_Inventory
                     services.GetRequiredService<ILogger<Program>>().LogError(ex, "An Error Occure While Seeding Data");
                     throw;
                 }
-            }
+            } */
             BuildWebHost(args).Run();
         }
 

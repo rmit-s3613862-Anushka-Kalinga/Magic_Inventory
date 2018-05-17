@@ -15,15 +15,6 @@
                 <a asp-area="" asp-controller="Manage" asp-action="Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>
             </li>
             <li>
-                <label>Test</label>
-                @{ var u = UserManager.GetUserId(User);}
-                @{var x = UserManager.FindByIdAsync(u);}
-                @{var y = UserManager.GetUserAsync(User);}
-
-                @UserManager.GetUserAsync(User).Result.StoreID
-
-             
-
                 <button type="submit" class="btn btn-link navbar-btn navbar-link">Log out</button>
             </li>
         </ul>
