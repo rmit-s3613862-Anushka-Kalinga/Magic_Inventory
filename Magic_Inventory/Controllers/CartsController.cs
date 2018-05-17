@@ -14,6 +14,7 @@ namespace Magic_Inventory.Controllers
     {
         private readonly ApplicationDbContext _context;
         private bool CreditCardVerified = false;
+        private string OrderNumber = "051913170518c1@sys.com";
 
         public CartsController(ApplicationDbContext context)
         {
@@ -79,7 +80,7 @@ namespace Magic_Inventory.Controllers
                 //var applicationDbContext = _context.Cart.Include(c => c.Product).Include(c => c.Store);
                 // Verify credit card and then make changes to the table
                 bool result = await UpdateCartAndOrderHistoryAsync();
-                return Redirect(nameof(Index));
+                return Redirect(nameof(Invoice));
             }
             else
                 return NotFound();
@@ -92,6 +93,7 @@ namespace Magic_Inventory.Controllers
                 var cartItem = _context.Cart.Where(s => s.UserName == User.Identity.Name.ToString());
                 
                 var orderNo = new OrderHistory().OrderNumber;
+                OrderNumber = orderNo;
                 orderNo = DateTime.Now.ToString("hhmmssddMMyy") + User.Identity.Name.ToString();
                 foreach (var item in cartItem)
                 {
@@ -112,11 +114,17 @@ namespace Magic_Inventory.Controllers
             return false;
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public IActionResult Invoice()
         {
-            return View();
+            if (!OrderNumber.Equals(""))
+            {
+                var context2 = _context.OrderHistory.Include(z => z.Product).Include(n => n.Store).Where(m => m.OrderNumber == "051913170518c1@sys.com");
+                return View(context2);
+            }
+            var context = _context.OrderHistory.Include(z => z.Product).Include(n => n.Store).Where(m => m.OrderNumber == "051913170518c1@sys.com");
+            return View(context);
+            return NotFound();
         }
 
         [HttpPost]
@@ -188,10 +196,7 @@ namespace Magic_Inventory.Controllers
             ViewData["StoreID"] = new SelectList(_context.Store, "StoreID", "StoreID", cart.StoreID);
             return View(cart);
         }
-
-        // POST: Carts/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+                
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("CartID,UserName,ProductID,StoreID,Quantity,Price,CartEntryDate")] Cart cart)

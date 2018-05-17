@@ -3,20 +3,6 @@
 @{
     ViewData["Title"] = "Shopping Cart";
 }
-<head>
-    <script>
-        window.onload = function () {
-            document.getElementById("ClickMinus").onclick = function () {
-                document.getElementById("QuantityChangeMinus").submit();
-                return false; // cancel the actual link
-            }
-            document.getElementById("ClickPlus").onclick = function () {
-                document.getElementById("QuantityChangePlus").submit();
-                return false; // cancel the actual link
-            }
-        }
-    </script>
-</head>
 <h2>Shopping Cart</h2>
 @{
     if (Model.Count() == 0)
