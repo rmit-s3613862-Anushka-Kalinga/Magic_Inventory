@@ -38,16 +38,45 @@ namespace Magic_Inventory.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult VerifyCreditCardNow()
+        public async Task<IActionResult> VerifyCreditCardNow()
         {
             if (!CreditCardVerified)
             {
                 CreditCardVerified = true;
                 //var applicationDbContext = _context.Cart.Include(c => c.Product).Include(c => c.Store);
-                return Redirect(nameof(Invoice));
+                // Verify credit card and then make changes to the table
+                bool result = await UpdateCartAndOrderHistoryAsync();
+                return Redirect(nameof(Index));
             }
             else
                 return NotFound();
+        }
+
+        private async Task<bool> UpdateCartAndOrderHistoryAsync()
+        {
+            if (CreditCardVerified)
+            {                
+                var cartItem = _context.Cart.Where(s => s.UserName == User.Identity.Name.ToString());
+                
+                var orderNo = new OrderHistory().OrderNumber;
+                orderNo = DateTime.Now.ToString("hhmmssddMMyy") + User.Identity.Name.ToString();
+                foreach (var item in cartItem)
+                {
+                    var orderHistory = new OrderHistory();
+                    orderHistory.OrderDate = DateTime.Now;
+                    orderHistory.ProductID = item.ProductID;
+                    orderHistory.StoreID = item.StoreID;
+                    orderHistory.Quantity = item.Quantity;
+                    orderHistory.UserName = item.UserName;
+                    orderHistory.Price = item.Price;
+                    orderHistory.OrderNumber = orderNo;
+                    _context.OrderHistory.Add(orderHistory);
+                    _context.Cart.Remove(item);
+                }
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            return false;
         }
 
         [HttpPost]
