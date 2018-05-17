@@ -83,6 +83,62 @@ namespace Magic_Inventory.Controllers
             return View(ownerInventory);
         }
 
+
+
+
+
+        // GET: OwnerInventories/Refill
+        public async Task<IActionResult> Refill(int? id)
+        {
+            if (id == null)
+            {
+                throw new ArgumentNullException(nameof(id));
+                // return NotFound();
+            }
+            var ownerInventory = await _context.OwnerInventory.Include(o => o.Product).SingleOrDefaultAsync(m => m.ProductID == id);
+            if (ownerInventory == null)
+            {
+                return NotFound();
+            }            
+            ViewBag.ProductName = ownerInventory.Product.Name;
+            return View(ownerInventory);
+        }
+
+        // POST: OwnerInventories/Refill        
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Refill(int id, [Bind("ProductID,StockLevel")] OwnerInventory ownerInventory)
+        {
+            if (id != ownerInventory.ProductID)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(ownerInventory);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!OwnerInventoryExists(ownerInventory.ProductID))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction("Index", "StockRequests");
+            }
+            ViewData["ProductID"] = new SelectList(_context.Product, "ProductID", "Name", ownerInventory.ProductID);
+            return View(ownerInventory);
+        }
+
+
         private bool OwnerInventoryExists(int id)
         {
             return _context.OwnerInventory.Any(e => e.ProductID == id);

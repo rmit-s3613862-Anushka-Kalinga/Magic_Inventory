@@ -41,7 +41,7 @@
             else { 
             <label>
                 You haven't got enough stock for accept this request -
-                @Html.ActionLink("Refill Stock", "Edit", "OwnerInventories", new {id = Model.ProductID})
+                @Html.ActionLink("Refill Stock", "Refill", "OwnerInventories", new {id = Model.ProductID})
             </label>
             }
         </dd>
