@@ -8,7 +8,7 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="ProductID" />
             <label>Product Name</label>
-            @ViewBag.ProductName 
+            @ViewBag.ProductName
             <div class="form-group">
                 <label asp-for="StockLevel" class="control-label"></label>
                 <input asp-for="StockLevel" class="form-control" />
@@ -21,9 +21,7 @@
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
