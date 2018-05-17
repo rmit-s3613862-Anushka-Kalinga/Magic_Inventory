@@ -29,6 +29,7 @@ namespace Magic_Inventory.Data
             var userManager = serviceProvider.GetService<UserManager<ApplicationUser>>();
 
             await EnsureUserHasRole(userManager,"ownermagic18@gmail.com", RoleConstants.OwnerRole);
+            await EnsureUserHasRole(userManager, "o1@sys.com", RoleConstants.OwnerRole);//o1
             await EnsureUserHasRole(userManager, "franchisemagic18@gmail.com", RoleConstants.FranchiseHolderRole);
             await EnsureUserHasRole(userManager, "franchisemagicEAST@gmail.com", RoleConstants.FranchiseHolderRole);
             await EnsureUserHasRole(userManager, "franchisemagicNorth@gmail.com", RoleConstants.FranchiseHolderRole);

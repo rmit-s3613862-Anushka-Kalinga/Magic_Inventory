@@ -7,6 +7,7 @@ using Magic_Inventory.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace Magic_Inventory.Controllers
@@ -39,6 +40,7 @@ namespace Magic_Inventory.Controllers
             
         }
 
+        //Show view for create new stock request for existing product in franchise holder store
         [Authorize(Roles =RoleConstants.FranchiseHolderRole)]
         public async Task<IActionResult> Create(int StoreID, int ProductID) {
 
@@ -64,6 +66,7 @@ namespace Magic_Inventory.Controllers
             return View();
         }
 
+        //Create new stock request
         [Authorize(Roles = RoleConstants.FranchiseHolderRole)]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -77,8 +80,9 @@ namespace Magic_Inventory.Controllers
             return View();
         }
 
+        //Process the new requests got form franchis holders 
+        [Authorize(Roles =RoleConstants.OwnerRole)]
         public async Task<IActionResult> ProcessStockRequest(int? id) {
-
             if (id == null) {
                 return NotFound();
             }
@@ -97,41 +101,73 @@ namespace Magic_Inventory.Controllers
             return View(stockRequestProcess);
         }
 
+        //Approve the stock requests 
+        //If product that request from franchise holder not present in his store then make a new product inside StoreInventory
+        [Authorize(Roles =RoleConstants.OwnerRole)]
         public async Task<IActionResult> StockRequestApproved(int? id) {
 
             var stockRequestProcess = await _context.StockRequest.Include(s => s.Store).Include(o => o.Product).SingleOrDefaultAsync(r => r.StockRequestID == id);
-            var stockRequestProductID = stockRequestProcess.ProductID;
-            var stockRequestStoreID = stockRequestProcess.StoreID;
-            var ownerInventoryProduct = await _context.OwnerInventory.SingleOrDefaultAsync(o => o.ProductID == stockRequestProductID);
+            var stockRequestProductID = stockRequestProcess.ProductID; //ID for product that requested
+            var stockRequestStoreID = stockRequestProcess.StoreID;     //ID for store that requested
 
-            var ownerStockLevel = ownerInventoryProduct.StockLevel;
-            var storeStockLevel = await GetStockLevel(stockRequestProcess.StoreID, stockRequestProcess.ProductID);
-            var stockRequestQ = stockRequestProcess.Quantity;
+            var isProductInStore = await ProductIsinStore(stockRequestProductID, stockRequestStoreID); // check that product already in franchise holder's store 
 
-            if (CheckStockAvalability(ownerStockLevel,stockRequestQ)) {               
+            var ownerInventoryProduct = await _context.OwnerInventory.SingleOrDefaultAsync(o => o.ProductID == stockRequestProductID); // OwnerInventory context for given product ID
+
+            var ownerStockLevel = ownerInventoryProduct.StockLevel; // Stock level for the given product in owner's stock
+            
+            //var storeStockLevel = await GetStockLevel(stockRequestProcess.StoreID, stockRequestProcess.ProductID);
+            
+            var stockRequestQ = stockRequestProcess.Quantity; // Requested quantity by Frenchise holder
+
+           
+
+            if (CheckStockAvalability(ownerStockLevel,stockRequestQ)) {  // check owner has enough stock to proceed              
 
                 var storeFilterResults = _context.StoreInventory.Where(s => s.StoreID == stockRequestStoreID);
-                var storeProductResult = await storeFilterResults.SingleOrDefaultAsync(o => o.ProductID == stockRequestProductID);
+                var storeProductResult = await storeFilterResults.SingleOrDefaultAsync(o => o.ProductID == stockRequestProductID); // filter results for specified store and product inside that
 
-                if (ownerInventoryProduct != null) {
-                    ownerInventoryProduct.StockLevel = (ownerStockLevel - stockRequestQ);
-                    storeProductResult.StockLevel = (storeStockLevel + stockRequestQ);
-                    _context.StockRequest.Remove(stockRequestProcess);
-                    await _context.SaveChangesAsync();
+                if (ownerInventoryProduct != null) { // check owner context null
+                    if (isProductInStore) // check that product requested in the given store
+                    {
+                        var storeStockLevel = await GetStockLevel(stockRequestProcess.StoreID, stockRequestProcess.ProductID); // stock level for given store
+                        ownerInventoryProduct.StockLevel = (ownerStockLevel - stockRequestQ); // subtract requested stock from owner's stock
+                        storeProductResult.StockLevel = (storeStockLevel + stockRequestQ); // add requested stock to franchise holder's store
+                        _context.StockRequest.Remove(stockRequestProcess);
+                        await _context.SaveChangesAsync();
+                    }
+                    else {                        
+                        var newProductToStore = new StoreInventory { StoreID = stockRequestStoreID, ProductID = stockRequestProductID, StockLevel = stockRequestQ }; // Add a new product to storeInventory 
+                        _context.Add(newProductToStore);
+                        ownerInventoryProduct.StockLevel = (ownerStockLevel - stockRequestQ);
+                        _context.StockRequest.Remove(stockRequestProcess);
+                        await _context.SaveChangesAsync();
+                    }
                 }
             }
 
             return RedirectToAction(nameof(Index));
         }
 
+        // View new products to franchise holder
+        [Authorize(Roles = RoleConstants.FranchiseHolderRole)]
         public async Task<IActionResult> CreateNewItemRequest() {
             var _user = await _userManager.GetUserAsync(User);
-            var ownerProductList =await _context.OwnerInventory.ToListAsync();
-            var storeProductList =  _context.StoreInventory.Include(o => o.Product).Where(s => s.StoreID == _user.StoreID);
+           // var ownerProductList =await _context.OwnerInventory.Include( o => o.Product).ToListAsync();
+            var productList = await _context.Product.ToListAsync();
+            var storeProductList = await _context.StoreInventory.Include(o => o.Product).Where(s => s.StoreID == _user.StoreID).ToListAsync();
 
-            var newProductsList = ownerProductList.RemoveAll(x => !storeProductList.Any(y => y.ProductID == x.ProductID));
+          //  var numberofProductsRemoved = ownerProductList.RemoveAll(x => storeProductList.Any(y => y.ProductID == x.ProductID));
 
-            ViewBag.NewList = newProductsList;
+            var numberofProductsRemoved = productList.RemoveAll(x => storeProductList.Any(y => y.ProductID == x.ProductID));
+           // var t =await _context.OwnerInventory.Include(o => o.Product).ToListAsync();
+
+            ViewData["ProductID"] = new SelectList(productList, "ProductID", "Name");
+            ViewData["StoreID"] = _user.StoreID;
+
+            
+           // ViewBag.NumberofProductsRemoved = numberofProductsRemoved;
+            ViewBag.NumberofProducts = productList.Count();
             return View();
         }
 
@@ -160,7 +196,16 @@ namespace Magic_Inventory.Controllers
             return ownerInventory.StockLevel;
         }
 
-
+        // Check that given product in the specified store 
+        private async Task<bool> ProductIsinStore(int productID, int storeID) {
+            bool hasProduct = false;
+            var n = await _context.StoreInventory.Where(s => s.StoreID == storeID).SingleOrDefaultAsync( o => o.ProductID == productID);
+            // n.Find(o => o.ProductID = productID);
+            if (n != null) {
+                return hasProduct = true;
+            }
+            return hasProduct;
+        }
         
     }
 }
