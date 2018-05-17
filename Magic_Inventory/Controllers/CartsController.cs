@@ -37,9 +37,9 @@ namespace Magic_Inventory.Controllers
                         var applicationDbContext2 = _context.Cart.Include(c => c.Product).Include(c => c.Store);
                         return View(await applicationDbContext2.ToListAsync());
                     }
-                    if (val.Equals("Plus"))
+                    if (val.Equals("+"))
                         newQuantity.Quantity++;
-                    else if (val.Equals("Minus"))
+                    else if (val.Equals("-"))
                         newQuantity.Quantity--;
                     if (newQuantity.Quantity <= 0)
                         _context.Cart.Remove(newQuantity);
@@ -48,7 +48,16 @@ namespace Magic_Inventory.Controllers
                     _context.SaveChanges();
                     val = "";
                 }
-            var applicationDbContext = _context.Cart.Include(c => c.Product).Include(c => c.Store);
+            var applicationDbContext = _context.Cart.Include(c => c.Product).Include(c => c.Store).Where(l=>l.UserName == User.Identity.Name.ToString());
+            int totalitem = 0;
+            double totalcost =0;
+            foreach (var item in applicationDbContext)
+            {
+                totalitem += item.Quantity;
+                totalcost = totalcost + (item.Quantity * item.Price);
+            }
+            ViewData["item"] = totalitem;
+            ViewData["cost"] = totalcost;
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -147,8 +156,6 @@ namespace Magic_Inventory.Controllers
         }
 
         // POST: Carts/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("CartID,UserName,ProductID,StoreID,Quantity,Price,CartEntryDate")] Cart cart)
