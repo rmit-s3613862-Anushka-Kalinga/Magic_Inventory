@@ -36,6 +36,7 @@ namespace Magic_Inventory.Data
             await EnsureUserHasRole(userManager, "franchisemagicWEST@gmail.com", RoleConstants.FranchiseHolderRole);
             await EnsureUserHasRole(userManager, "franchisemagicSOUTH@gmail.com", RoleConstants.FranchiseHolderRole);
             await EnsureUserHasRole(userManager, "c1@sys.com", RoleConstants.CustomerRole);//Password :c1
+            await EnsureUserHasRole(userManager, "c2@sys.com", RoleConstants.CustomerRole);//Password :c2
             await EnsureUserHasRole(userManager, "f1@sys.com", RoleConstants.FranchiseHolderRole);//Password :f1 store owner for storeID: 1
 
         }      

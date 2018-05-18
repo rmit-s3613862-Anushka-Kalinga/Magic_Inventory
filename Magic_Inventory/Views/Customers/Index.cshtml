@@ -23,8 +23,11 @@
             <th>
                 @Html.DisplayNameFor(model => model.Store)
             </th>
-            <th>               
+            <th>
                 @Html.DisplayNameFor(model => model.StockLevel)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Product.Price)
             </th>
             <th></th>
         </tr>
@@ -38,17 +41,20 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Store.Name)
             </td>
-            <td>                
+            <td>
                 @Html.DisplayFor(modelItem => item.StockLevel)
             </td>
             <td>
+                $@Html.DisplayFor(modelItem => item.Product.Price)
+            </td>
+            <td>
                 <form asp-action="AddToCart">
-                    <input type="number" min="1" max="@item.StockLevel" value="1" style="width: 40px;" name="Quantity"/>
+                    <input type="number" min="1" max="@item.StockLevel" value="1" style="width: 40px;" name="Quantity" />
                     <input type="hidden" name="ProductID" value="@item.ProductID" />
                     <input type="hidden" name="StoreID" value="@item.StoreID" />
                     <input type="submit" value="Add to cart" />
-                    </form>
-</td>
+                </form>
+            </td>
         </tr>
 }
     </tbody>
