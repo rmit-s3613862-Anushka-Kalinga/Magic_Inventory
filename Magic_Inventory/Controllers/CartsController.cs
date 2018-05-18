@@ -14,7 +14,7 @@ namespace Magic_Inventory.Controllers
     {
         private readonly ApplicationDbContext _context;
         private bool CreditCardVerified = false;
-        private string OrderNumber = "051913170518c1@sys.com";
+        private static string OrderNumber = " ";
 
         public CartsController(ApplicationDbContext context)
         {
@@ -66,7 +66,6 @@ namespace Magic_Inventory.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult VerifyCreditCard()
         {
-            //var applicationDbContext = _context.Cart.Include(c => c.Product).Include(c => c.Store);
             return View();
         }
 
@@ -77,8 +76,6 @@ namespace Magic_Inventory.Controllers
             if (!CreditCardVerified)
             {
                 CreditCardVerified = true;
-                //var applicationDbContext = _context.Cart.Include(c => c.Product).Include(c => c.Store);
-                // Verify credit card and then make changes to the table
                 bool result = await UpdateCartAndOrderHistoryAsync();
                 return Redirect(nameof(Invoice));
             }
@@ -93,8 +90,9 @@ namespace Magic_Inventory.Controllers
                 var cartItem = _context.Cart.Where(s => s.UserName == User.Identity.Name.ToString());
                 
                 var orderNo = new OrderHistory().OrderNumber;
-                OrderNumber = orderNo;
+                
                 orderNo = DateTime.Now.ToString("hhmmssddMMyy") + User.Identity.Name.ToString();
+                OrderNumber = orderNo;
                 foreach (var item in cartItem)
                 {
                     var orderHistory = new OrderHistory();
@@ -119,11 +117,22 @@ namespace Magic_Inventory.Controllers
         {
             if (!OrderNumber.Equals(""))
             {
-                var context2 = _context.OrderHistory.Include(z => z.Product).Include(n => n.Store).Where(m => m.OrderNumber == "051913170518c1@sys.com");
+                var context2 = _context.OrderHistory.Include(z => z.Product).Include(n => n.Store).Where(m => m.OrderNumber == OrderNumber);
+                int totalitem2 = 0;
+                double totalcost2 = 0;
+                foreach (var item in context2)
+                {
+                    totalitem2 += item.Quantity;
+                    totalcost2 = totalcost2 + (item.Quantity * item.Price);
+                    ViewData["date"] = item.OrderDate.ToString("dd/mm/yyyy");
+                    ViewData["number"] = item.OrderNumber;
+                    ViewData["name"] = item.UserName;
+                }
+                ViewData["item"] = totalitem2;
+                ViewData["cost"] = totalcost2;
+                
                 return View(context2);
             }
-            var context = _context.OrderHistory.Include(z => z.Product).Include(n => n.Store).Where(m => m.OrderNumber == "051913170518c1@sys.com");
-            return View(context);
             return NotFound();
         }
 
