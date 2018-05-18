@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2036
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Magic_Inventory", "Magic_Inventory\Magic_Inventory.csproj", "{B4F5AD4F-D661-41D7-A0AB-7F9412DAA014}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Magic_Inventory", "Magic_Inventory\Magic_Inventory.csproj", "{B4F5AD4F-D661-41D7-A0AB-7F9412DAA014}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderHistoryWebApi", "OrderHistoryWebApi\OrderHistoryWebApi.csproj", "{682C6BFF-6B21-4AF2-B6A5-A40102EF9F01}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{B4F5AD4F-D661-41D7-A0AB-7F9412DAA014}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B4F5AD4F-D661-41D7-A0AB-7F9412DAA014}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B4F5AD4F-D661-41D7-A0AB-7F9412DAA014}.Release|Any CPU.Build.0 = Release|Any CPU
+		{682C6BFF-6B21-4AF2-B6A5-A40102EF9F01}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{682C6BFF-6B21-4AF2-B6A5-A40102EF9F01}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{682C6BFF-6B21-4AF2-B6A5-A40102EF9F01}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{682C6BFF-6B21-4AF2-B6A5-A40102EF9F01}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
