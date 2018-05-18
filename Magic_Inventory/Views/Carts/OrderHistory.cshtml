@@ -4,24 +4,19 @@
     <h2>Order History</h2>
     <table class="table table-striped">
         <thead>
-            <tr>
-                <th>OrderID</th>
-                <th>userName</th>
-                <th>productID</th>
-                <th>storeID</th>
-                <th>quantity</th>
-                <th>price</th>
-                <th>orderDate</th>
+            <tr>               
+                <th>Product Name</th>
+                <th>Store Name</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Order Date</th>
                 <th>orderNumber</th>
-
-</tr>
+            </tr>
         <thead>
         <tbody>
-            <tr ng-repeat="x in orderHistory">
-                <td>{{ x.orderID }}</td>
-                <td>{{ x.userName }}</td>
-                <td>{{ x.productID }}</td>
-                <td>{{ x.storeID }}</td>
+            <tr ng-repeat="x in orderHistory">               
+                <td>{{ x.product.name }}</td>
+                <td>{{ x.store.name }}</td>
                 <td>{{ x.quantity }}</td>
                 <td>{{ x.price | currency }}</td>
                 <td>{{ x.orderDate }}</td>
