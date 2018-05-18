@@ -127,8 +127,7 @@ namespace Magic_Inventory.Controllers
             return NotFound();
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+       
         public IActionResult OrderHistory()
         {
 

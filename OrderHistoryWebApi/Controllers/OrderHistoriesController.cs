@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OrderHistoryWebApi.Data;
@@ -12,10 +13,11 @@ using OrderHistoryWebApi.Models;
 namespace OrderHistoryWebApi.Controllers
 {
     [Route("api/[controller]")]
+    
     public class OrderHistoriesController : Controller
     {
         private readonly OrderHistoryDbContext _context;
-
+        
         public OrderHistoriesController(OrderHistoryDbContext context) {
             _context = context;
         }

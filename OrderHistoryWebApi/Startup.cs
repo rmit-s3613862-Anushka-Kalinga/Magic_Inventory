@@ -27,6 +27,9 @@ namespace OrderHistoryWebApi
         {
             services.AddDbContext<OrderHistoryDbContext>(options =>
                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            //Allow CORS
+            services.AddCors();
+
             services.AddMvc();
         }
 
@@ -37,6 +40,9 @@ namespace OrderHistoryWebApi
             {
                 app.UseDeveloperExceptionPage();
             }
+            // Shows UseCors with CorsPolicyBuilder.
+            app.UseCors(builder =>
+               builder.WithOrigins("https://localhost:44322").AllowAnyHeader());
 
             app.UseMvc();
         }
