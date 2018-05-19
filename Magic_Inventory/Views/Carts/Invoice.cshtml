@@ -13,15 +13,17 @@
 
                 else
                 {
-    <table border="1">
+    <table class="table table-bordered" >
         <tr>
             <td>
                 <table border="0" style="width:100%;" >
                     <tr style="border-bottom:double"><td align="center" colspan="2">
-                            <h4 align="center">Magic Inventory Invoice</h4>
+                            <h4 align="center"><label> Magic Inventory Invoice</label></h4>
                         </td></tr>
-                    <tr style="padding:5px"><td style="padding:5px">@Html.DisplayNameFor(model => model.OrderDate): @ViewData["date"]</td><td style="padding:5px; align-content:flex-end"> UserName: @ViewData["name"]</td></tr>
-                    <tr><td style="padding:5px; padding-right:10px"> OrderNumber:  @ViewData["number"]</td></tr>
+                    <tr style="padding:5px">
+                    <td style="padding:5px"><label> @Html.DisplayNameFor(model => model.OrderDate):</label> @ViewData["date"]</td>
+                    <td style="padding:5px; align-content:flex-end"> <label> Customer ID:</label> @ViewData["name"]</td></tr>
+                    <tr><td style="padding:5px; padding-right:10px"><label> OrderNumber:</label>  @ViewData["number"]</td></tr>
                 </table>
             </td>
         </tr>
@@ -29,10 +31,8 @@
             <td>
                 <table class="table" align="center" width="100" >
                     <thead>
-                        <tr border="1">
-                            <th>
-                                
-                            </th>
+                        <tr border="1" >
+                            
                             <th>
                                 @Html.DisplayNameFor(model => model.Product)
                             </th>
@@ -51,9 +51,7 @@
                         @foreach (var item in Model)
                 {
                     <tr>
-                        <td>
-                            @*@Html.DisplayFor(modelItem => item.OrderDate)*@
-                        </td>
+                        
                         <td>
                             @Html.DisplayFor(modelItem => item.Product.Name)
                         </td>
@@ -68,16 +66,18 @@
                         </td>
                     </tr>
                 }
-                        <tr><td><hr /></td></tr>
+                        <tr>
+                        
+                        </tr>
                         <tr>
                             <td></td>
-                            <td></td>
-                            <td></td>
+                            <td><label>Products Purchased:</label> </td>
+                            <td>@ViewData["item"]</td>
                             <td>
-                                Total: @ViewData["item"]
+                                <label> Cost: </label>$@ViewData["cost"]
                             </td>
                             <td>
-                                Cost: $@ViewData["cost"]
+                               
                             </td>
                             @*<td>
                                 <form asp-action="VerifyCreditCard" method="post">

@@ -78,135 +78,137 @@ namespace Magic_Inventory.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
+        // ---------------------------------------- To be Remove -----------------------------------------
         // GET: Customers/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+        //public async Task<IActionResult> Details(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            var storeInventory = await _context.StoreInventory
-                .Include(s => s.Product)
-                .Include(s => s.Store)
-                .SingleOrDefaultAsync(m => m.StoreID == id);
-            if (storeInventory == null)
-            {
-                return NotFound();
-            }
+        //    var storeInventory = await _context.StoreInventory
+        //        .Include(s => s.Product)
+        //        .Include(s => s.Store)
+        //        .SingleOrDefaultAsync(m => m.StoreID == id);
+        //    if (storeInventory == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            return View(storeInventory);
-        }
+        //    return View(storeInventory);
+        //}
 
         // GET: Customers/Create
-        public IActionResult Create()
-        {
-            ViewData["ProductID"] = new SelectList(_context.Product, "ProductID", "Name");
-            ViewData["StoreID"] = new SelectList(_context.Store, "StoreID", "StoreID");
-            return View();
-        }
+        //public IActionResult Create()
+        //{
+        //    ViewData["ProductID"] = new SelectList(_context.Product, "ProductID", "Name");
+        //    ViewData["StoreID"] = new SelectList(_context.Store, "StoreID", "StoreID");
+        //    return View();
+        //}
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("StoreID,ProductID,StockLevel")] StoreInventory storeInventory)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(storeInventory);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["ProductID"] = new SelectList(_context.Product, "ProductID", "Name", storeInventory.ProductID);
-            ViewData["StoreID"] = new SelectList(_context.Store, "StoreID", "StoreID", storeInventory.StoreID);
-            return View(storeInventory);
-        }
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Create([Bind("StoreID,ProductID,StockLevel")] StoreInventory storeInventory)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        _context.Add(storeInventory);
+        //        await _context.SaveChangesAsync();
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    ViewData["ProductID"] = new SelectList(_context.Product, "ProductID", "Name", storeInventory.ProductID);
+        //    ViewData["StoreID"] = new SelectList(_context.Store, "StoreID", "StoreID", storeInventory.StoreID);
+        //    return View(storeInventory);
+        //}
 
         // GET: Customers/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+        //public async Task<IActionResult> Edit(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            var storeInventory = await _context.StoreInventory.SingleOrDefaultAsync(m => m.StoreID == id);
-            if (storeInventory == null)
-            {
-                return NotFound();
-            }
-            ViewData["ProductID"] = new SelectList(_context.Product, "ProductID", "Name", storeInventory.ProductID);
-            ViewData["StoreID"] = new SelectList(_context.Store, "StoreID", "StoreID", storeInventory.StoreID);
-            return View(storeInventory);
-        }
+        //    var storeInventory = await _context.StoreInventory.SingleOrDefaultAsync(m => m.StoreID == id);
+        //    if (storeInventory == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    ViewData["ProductID"] = new SelectList(_context.Product, "ProductID", "Name", storeInventory.ProductID);
+        //    ViewData["StoreID"] = new SelectList(_context.Store, "StoreID", "StoreID", storeInventory.StoreID);
+        //    return View(storeInventory);
+        //}
         
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("StoreID,ProductID,StockLevel")] StoreInventory storeInventory)
-        {
-            if (id != storeInventory.StoreID)
-            {
-                return NotFound();
-            }
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Edit(int id, [Bind("StoreID,ProductID,StockLevel")] StoreInventory storeInventory)
+        //{
+        //    if (id != storeInventory.StoreID)
+        //    {
+        //        return NotFound();
+        //    }
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(storeInventory);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!StoreInventoryExists(storeInventory.StoreID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["ProductID"] = new SelectList(_context.Product, "ProductID", "Name", storeInventory.ProductID);
-            ViewData["StoreID"] = new SelectList(_context.Store, "StoreID", "StoreID", storeInventory.StoreID);
-            return View(storeInventory);
-        }
+        //    if (ModelState.IsValid)
+        //    {
+        //        try
+        //        {
+        //            _context.Update(storeInventory);
+        //            await _context.SaveChangesAsync();
+        //        }
+        //        catch (DbUpdateConcurrencyException)
+        //        {
+        //            if (!StoreInventoryExists(storeInventory.StoreID))
+        //            {
+        //                return NotFound();
+        //            }
+        //            else
+        //            {
+        //                throw;
+        //            }
+        //        }
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    ViewData["ProductID"] = new SelectList(_context.Product, "ProductID", "Name", storeInventory.ProductID);
+        //    ViewData["StoreID"] = new SelectList(_context.Store, "StoreID", "StoreID", storeInventory.StoreID);
+        //    return View(storeInventory);
+        //}
 
         // GET: Customers/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+        //public async Task<IActionResult> Delete(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            var storeInventory = await _context.StoreInventory
-                .Include(s => s.Product)
-                .Include(s => s.Store)
-                .SingleOrDefaultAsync(m => m.StoreID == id);
-            if (storeInventory == null)
-            {
-                return NotFound();
-            }
+        //    var storeInventory = await _context.StoreInventory
+        //        .Include(s => s.Product)
+        //        .Include(s => s.Store)
+        //        .SingleOrDefaultAsync(m => m.StoreID == id);
+        //    if (storeInventory == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            return View(storeInventory);
-        }
+        //    return View(storeInventory);
+        //}
 
         // POST: Customers/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var storeInventory = await _context.StoreInventory.SingleOrDefaultAsync(m => m.StoreID == id);
-            _context.StoreInventory.Remove(storeInventory);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
+        //[HttpPost, ActionName("Delete")]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> DeleteConfirmed(int id)
+        //{
+        //    var storeInventory = await _context.StoreInventory.SingleOrDefaultAsync(m => m.StoreID == id);
+        //    _context.StoreInventory.Remove(storeInventory);
+        //    await _context.SaveChangesAsync();
+        //    return RedirectToAction(nameof(Index));
+        //}
 
-        private bool StoreInventoryExists(int id)
-        {
-            return _context.StoreInventory.Any(e => e.StoreID == id);
-        }
+        //private bool StoreInventoryExists(int id)
+        //{
+        //    return _context.StoreInventory.Any(e => e.StoreID == id);
+        //}
     }
 }

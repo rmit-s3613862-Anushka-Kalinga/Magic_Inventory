@@ -54,33 +54,41 @@
                         <td>
                             <form asp-action="Index" method="POST" name="someForm">
                                 <input type="hidden" name="CartID" value="@item.CartID" />
-                                <input type="submit" name="val" value="-" style="font-size:larger" width="2" height="2" />
-                                @Html.DisplayFor(modelItem => item.Quantity)
-                                <input type="submit" name="val" value="+" style="font-size:larger" width="2" height="2" />
+                                <input type="submit" name="val" value="-" style="font-size:larger" width="2" height="2" class="btn  btn-danger btn-xs"/>
+                                @Html.DisplayFor(modelItem => item.Quantity) 
+                                <input type="submit" name="val" value="+" style="font-size:larger" width="2" height="2" class="btn btn-success btn-xs" />
                             </form>
                         </td>
                         <td>
-                            <a asp-action="DeleteItem" asp-route-id="@item.CartID">Delete</a>
+                            <a asp-action="DeleteItem" asp-route-id="@item.CartID" class="btn btn-danger"><span class="glyphicon glyphicon-remove"> Delete</span></a>
                         </td>
                     </tr>
                 }
-                <tr><td><hr /></td></tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+
+                    </tr>
                 <tr>
                     <td></td>
                     <td></td>
                     <td></td>
-                    <td>
-                        Cost: $@ViewData["cost"]
+                    <td>                        
+                        <label>Cost:</label>  $@ViewData["cost"]
                     </td>
                     <td>
-                        Total: @ViewData["item"]
+                        <label>Total:</label>  @ViewData["item"]
                     </td>
                     <td>
                         <form asp-action="VerifyCreditCard" method="post">
                             @{if (Model.LongCount() == (long)0)
-                                {<input type="submit" hidden="hidden" disabled value="Check out" />}
-                                else
-                                { <input type="submit" value="Check out" /> }
+        {<input type="submit" hidden="hidden" disabled value="Check out" class="btn btn-primary" />}
+else
+{  <input type="submit" value="Check out" class="btn btn-primary" /> }
                             }
                         </form>
 

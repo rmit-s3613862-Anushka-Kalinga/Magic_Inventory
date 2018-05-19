@@ -1,20 +1,22 @@
 ﻿@model IEnumerable<Magic_Inventory.Models.StoreInventory>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Customer";
 }
 
-<h2>Index</h2>
-<form asp-action="Index">
-    <p>
-        Stores: <select name="store" asp-items="@(new SelectList(Model.Select(s => s.Store.Name).Distinct()))">
-            <option value="">All Stores</option>
-        </select>
-        Title: <input type="text" value="@ViewData["searchName"]" name="searchName">
-        <input type="submit" value="Filter" />
-    </p>
+<h2>Products In Stores</h2>
+<form asp-action="Index" class="form-group">
+
+    <label> Stores:</label>
+    <select name="store" asp-items="@(new SelectList(Model.Select(s => s.Store.Name).Distinct()))">
+        <option value="">All Stores</option>
+    </select>
+    <label> Title:</label>
+    <input type="text" value="@ViewData["searchName"]" name="searchName">
+    <input type="submit" value="Filter" class="btn btn-success" />
+
 </form>
-<table class="table">
+<table class="table table-hover table-responsive ">
     <thead>
         <tr>
             <th>
@@ -52,7 +54,7 @@
                     <input type="number" min="1" max="@item.StockLevel" value="1" style="width: 40px;" name="Quantity" />
                     <input type="hidden" name="ProductID" value="@item.ProductID" />
                     <input type="hidden" name="StoreID" value="@item.StoreID" />
-                    <input type="submit" value="Add to cart" />
+                    <input type="submit" value="Add to cart" class="btn btn-primary"/>
                 </form>
             </td>
         </tr>

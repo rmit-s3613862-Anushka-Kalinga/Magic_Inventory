@@ -60,33 +60,30 @@ namespace Magic_Inventory.Controllers
             }
 
             if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(ownerInventory);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!OwnerInventoryExists(ownerInventory.ProductID))
+            {              
+                    try
                     {
-                        return NotFound();
+                        _context.Update(ownerInventory);
+                        await _context.SaveChangesAsync();
                     }
-                    else
+                    catch (DbUpdateConcurrencyException)
                     {
-                        throw;
-                    }
-                }
+                        if (!OwnerInventoryExists(ownerInventory.ProductID))
+                        {
+                            return NotFound();
+                        }
+                        else
+                        {
+                            throw;
+                        }
+                    }              
+
                 return RedirectToAction(nameof(Index));
             }
             ViewData["ProductID"] = new SelectList(_context.Product, "ProductID", "Name", ownerInventory.ProductID);
             return View(ownerInventory);
         }
-
-
-
-
-
+        
         // GET: OwnerInventories/Refill
         public async Task<IActionResult> Refill(int? id)
         {
@@ -143,6 +140,6 @@ namespace Magic_Inventory.Controllers
         {
             return _context.OwnerInventory.Any(e => e.ProductID == id);
         }
-
+       
     }
 }

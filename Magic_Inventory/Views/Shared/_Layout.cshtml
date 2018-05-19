@@ -37,15 +37,11 @@
             </div>            
             <div class="navbar-collapse collapse">
                 @if (SignInManager.IsSignedIn(User))
-                {
-
-                    // var x = UserManager.GetUserAsync(User);
-                    // var y = UserManager.GetUsersInRoleAsync("Owner");
-                    // var i = User.IsInRole("Owner");
+                {                  
                     if (User.IsInRole(RoleConstants.OwnerRole))
                     {
                                     <ul class="nav navbar-nav">
-                                        <li><a asp-area="" asp-controller="OwnerInventories" asp-action="Index">Inventory List</a></li>
+                                        <li><a asp-area="" asp-controller="OwnerInventories" asp-action="Index">Product List</a></li>
                                         <li><a asp-area="" asp-controller="StockRequests" asp-action="Index">Stock Requests</a></li>
                                         <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
                                     </ul>

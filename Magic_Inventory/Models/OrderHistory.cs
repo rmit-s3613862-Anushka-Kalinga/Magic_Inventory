@@ -32,11 +32,13 @@ namespace Magic_Inventory.Models
         [Range(0.01, 1000.00, ErrorMessage = "Price must be between 0.01 and 1000.00")]
         public double Price { get; set; }
 
+        [Display(Name ="Order Date")]
         [DataType(DataType.DateTime), Required]
         [DisplayFormat(DataFormatString = "{hh:mm dd-MM-yy}", ApplyFormatInEditMode = true)]
         public DateTime OrderDate { get; set; }
 
         //Date+UserName=
+        [Display(Name = "Order Number")]
         [Required]
         public string OrderNumber { get; set; }
     }

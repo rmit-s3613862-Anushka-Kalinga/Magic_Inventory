@@ -15,6 +15,7 @@ namespace Magic_Inventory.Models
         public Product Product { get; set; }
 
         [Display(Name ="Stock Level")]
+        [Range(1, 1000, ErrorMessage = "Stock Level must be between 1 and 1000")]
         public int StockLevel { get; set; }
     }
 }
