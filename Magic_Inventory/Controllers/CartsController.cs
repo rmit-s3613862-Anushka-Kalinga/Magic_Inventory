@@ -139,7 +139,7 @@ namespace Magic_Inventory.Controllers
        
         public IActionResult OrderHistory()
         {
-
+            @ViewBag.UserName = User.Identity.Name;
             return View();
         }
 

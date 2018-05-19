@@ -30,10 +30,15 @@ namespace OrderHistoryWebApi.Controllers
         }
 
         // GET api/<controller>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        [HttpGet("{name}")]
+        public async Task<IEnumerable<OrderHistory>> GetById(string name)
         {
-            return "value";
+                var item = _context.OrderHistory.Include(s => s.Store).Include(o => o.Product).Where(u => u.UserName == name);
+                    if (item == null)
+                    {
+                        //  return NotFound();
+                    }
+            return item;
         }
 
         // POST api/<controller>

@@ -32,7 +32,7 @@ namespace Magic_Inventory.Controllers
             return View( await storeInventoryList.ToListAsync());
         }
 
-        public async Task<IActionResult> ShowStoreInventory(int? id)
+        public IActionResult ShowStoreInventory(int? id)
         {
 
             if (id == null)
