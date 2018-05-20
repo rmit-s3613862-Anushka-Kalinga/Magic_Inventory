@@ -6,11 +6,19 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Magic_Inventory.Controllers
 {
-    public class TestController : Controller
+    public class ErrorController : Controller
     {
         public IActionResult Index()
         {
             return View();
         }
+
+        public IActionResult ClientError(string id) {
+
+
+            return View("Error404");
+
+        }
+
     }
 }
