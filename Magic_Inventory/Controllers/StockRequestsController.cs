@@ -52,11 +52,7 @@ namespace Magic_Inventory.Controllers
             }            
             //Get Store Name and Product Name in database
             var storeName = _context.Store.SingleOrDefaultAsync(s => s.StoreID == StoreID);
-            var productName = _context.Product.SingleOrDefaultAsync(o => o.ProductID == ProductID);
-
-            //Get stock level using StoreID and ProductId
-           // var currentStockForSore =  _context.StoreInventory.Where(s => s.StoreID == StoreID );
-            //var currentStock =await currentStockForSore.SingleOrDefaultAsync(o => o.ProductID == ProductID);
+            var productName = _context.Product.SingleOrDefaultAsync(o => o.ProductID == ProductID);           
            
             var currentstockLevel = await GetStockLevel(StoreID, ProductID);
               
@@ -87,17 +83,14 @@ namespace Magic_Inventory.Controllers
                 return NotFound();
             }
             var stockRequestProcess =await _context.StockRequest.Include(s => s.Store).Include(o => o.Product).SingleOrDefaultAsync( r => r.StockRequestID == id);
-           
-           // storeID = stockRequestProcess.StoreID;
-           // productID = stockRequestProcess.ProductID;
+                     
             //Get owner stock level using ProductId     
             var ownerStockLevel = await GetOwnerStockLevel(stockRequestProcess.ProductID);
             var stockRequestQuantity = stockRequestProcess.Quantity;
-           // storeStockLevel =await GetStockLevel(storeID, productID);
+          
             ViewBag.StockLevel = ownerStockLevel;
-            ViewBag.Avalability = CheckStockAvalability(ownerStockLevel, stockRequestQuantity);
-
-           
+            ViewBag.Avalability = CheckStockAvalability(ownerStockLevel, stockRequestQuantity); 
+            
             return View(stockRequestProcess);
         }
 
@@ -152,21 +145,13 @@ namespace Magic_Inventory.Controllers
         // View new products to franchise holder
         [Authorize(Roles = RoleConstants.FranchiseHolderRole)]
         public async Task<IActionResult> CreateNewItemRequest() {
-            var _user = await _userManager.GetUserAsync(User);
-           // var ownerProductList =await _context.OwnerInventory.Include( o => o.Product).ToListAsync();
+            var _user = await _userManager.GetUserAsync(User);           
             var productList = await _context.Product.ToListAsync();
             var storeProductList = await _context.StoreInventory.Include(o => o.Product).Where(s => s.StoreID == _user.StoreID).ToListAsync();
-
-          //  var numberofProductsRemoved = ownerProductList.RemoveAll(x => storeProductList.Any(y => y.ProductID == x.ProductID));
-
             var numberofProductsRemoved = productList.RemoveAll(x => storeProductList.Any(y => y.ProductID == x.ProductID));
-           // var t =await _context.OwnerInventory.Include(o => o.Product).ToListAsync();
-
+           
             ViewData["ProductID"] = new SelectList(productList, "ProductID", "Name");
-            ViewData["StoreID"] = _user.StoreID;
-
-            
-           // ViewBag.NumberofProductsRemoved = numberofProductsRemoved;
+            ViewData["StoreID"] = _user.StoreID;          
             ViewBag.NumberofProducts = productList.Count();
             return View();
         }
@@ -200,7 +185,7 @@ namespace Magic_Inventory.Controllers
         private async Task<bool> ProductIsinStore(int productID, int storeID) {
             bool hasProduct = false;
             var n = await _context.StoreInventory.Where(s => s.StoreID == storeID).SingleOrDefaultAsync( o => o.ProductID == productID);
-            // n.Find(o => o.ProductID = productID);
+           
             if (n != null) {
                 return hasProduct = true;
             }

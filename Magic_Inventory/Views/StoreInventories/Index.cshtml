@@ -31,7 +31,7 @@
                 @Html.DisplayFor(modelItem => item.Product.Price)
             </td>
             <td>
-                @Html.ActionLink("Stock Request", "Create","StockRequests", new { StoreID = item.StoreID, ProductID = item.ProductID }) 
+                @Html.ActionLink("Request Stock", "Create","StockRequests", new { StoreID = item.StoreID, ProductID = item.ProductID }) 
                
             </td>
         </tr>
