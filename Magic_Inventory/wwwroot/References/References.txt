@@ -6,3 +6,7 @@ References Taken from:
 	https://stackoverflow.com
 4. w3schools
 	https://www.w3schools.com
+5. Home Image
+	http://wheretheresawilltheresaway-spain.blogspot.com.au/2018/01/listening-about-magic.html
+6. Credit Card Validation
+	Nuget package - CreditCardValidator

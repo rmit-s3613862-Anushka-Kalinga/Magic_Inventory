@@ -10,7 +10,10 @@
             $("#mySelect").val(temp);
         }
         function addProduct() {
-            document.getElementById("msg").style.display = "block";
+            var rstok = document.getElementById("rStock").value;
+            if (rstok > 0) {
+                document.getElementById("msg").style.display = "block";
+            }
         }
     </script>
 </head>
@@ -71,7 +74,7 @@ else
                     </td>
                     <td>
                         <form asp-action="AddToCart">
-                            <input type="number" min="1" max="@item.StockLevel" value="1" style="width: 40px;" name="Quantity" />
+                            <input type="number" min="1" max="@item.StockLevel" value="1" style="width: 40px;" name="Quantity" id="rStock" />
                             <input type="hidden" name="ProductID" value="@item.ProductID" />
                             <input type="hidden" name="StoreID" value="@item.StoreID" />
                             <input type="hidden" name="searchName" value="@ViewData["searchName"]" />

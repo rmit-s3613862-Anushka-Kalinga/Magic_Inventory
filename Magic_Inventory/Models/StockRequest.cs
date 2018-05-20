@@ -13,6 +13,7 @@ namespace Magic_Inventory.Models
         public int StoreID { get; set; }
         public Store Store { get; set; }
 
+        
         public int ProductID { get; set; }
         public Product Product { get; set; }
 

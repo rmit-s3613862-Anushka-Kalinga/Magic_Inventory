@@ -69,8 +69,7 @@ namespace Magic_Inventory
             }
             else
             {
-                app.UseExceptionHandler("/Error");
-              
+                app.UseExceptionHandler("/Error");            
                 
             }
             app.UseRewriter(new RewriteOptions().AddRedirectToHttps());
@@ -78,8 +77,7 @@ namespace Magic_Inventory
             app.UseStaticFiles();
 
             app.UseAuthentication();
-
-            // app.UseStatusCodePages();
+            
             app.UseStatusCodePagesWithReExecute("/Error/ClientError/{0}");
 
             app.UseMvc(routes =>

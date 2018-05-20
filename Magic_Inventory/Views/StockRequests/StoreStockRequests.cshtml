@@ -9,9 +9,8 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Quantity)
-            </th>
-            
-            <th></th>
+            </th>     
+          
         </tr>
     </thead>
     <tbody>
@@ -23,12 +22,8 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Quantity)
-            </td>
+            </td>        
             
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.StockRequestID">Edit</a> |               
-                <a asp-action="Delete" asp-route-id="@item.StockRequestID">Delete</a>
-            </td>
         </tr>
 }
     </tbody>
