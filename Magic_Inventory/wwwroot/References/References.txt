@@ -1,0 +1,8 @@
+References Taken from:
+1. Microsoft MSDN
+	https://msdn.microsoft.com/en-us/
+2. Lecture, Lab and Practical example from WDT course
+3. Stack Overflow
+	https://stackoverflow.com
+4. w3schools
+	https://www.w3schools.com
