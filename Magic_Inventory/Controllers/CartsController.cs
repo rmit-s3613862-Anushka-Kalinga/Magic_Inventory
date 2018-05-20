@@ -38,14 +38,22 @@ namespace Magic_Inventory.Controllers
                         var applicationDbContext2 = _context.Cart.Include(c => c.Product).Include(c => c.Store);
                         return View(await applicationDbContext2.ToListAsync());
                     }
-                    if (val.Equals("+"))
+                    StoreInventory si = _context.StoreInventory.Where(a => a.StoreID == newQuantity.StoreID).Where(m => m.ProductID == newQuantity.ProductID).Single();
+                    if (val.Equals("+") && si.StockLevel > 0)
+                    {
                         newQuantity.Quantity++;
+                        si.StockLevel--;
+                    }
                     else if (val.Equals("-"))
+                    {
                         newQuantity.Quantity--;
+                        si.StockLevel++;
+                    }
                     if (newQuantity.Quantity <= 0)
                         _context.Cart.Remove(newQuantity);
                     else
                         _context.Update(newQuantity);
+                    _context.Update(si);
                     _context.SaveChanges();
                     val = "";
                 }
@@ -266,7 +274,12 @@ namespace Magic_Inventory.Controllers
         {
             var cart = await _context.Cart.SingleOrDefaultAsync(m => m.CartID == CartID);
             if (cart != null)
+            {
+                StoreInventory si = _context.StoreInventory.Where(a => a.StoreID == cart.StoreID).Where(m => m.ProductID == cart.ProductID).Single();
+                si.StockLevel += cart.Quantity;
+                _context.StoreInventory.Update(si);
                 _context.Cart.Remove(cart);
+            }
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }

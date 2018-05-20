@@ -21,7 +21,7 @@
                 <td>{{ x.store.name }}</td>
                 <td>{{ x.quantity }}</td>
                 <td>{{ x.price | currency }}</td>
-                <td>{{ x.orderDate }}</td>
+                <td>{{ x.orderDate |date: "dd/MM/yy "}} at {{ x.orderDate | date : "hh:mm a"  }}</td>
                 <td>{{ x.orderNumber}}</td>
             </tr>
         </tbody>

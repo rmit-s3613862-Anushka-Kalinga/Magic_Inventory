@@ -29,7 +29,7 @@
         </tr>
         <tr>
             <td>
-                <table class="table" align="center" width="100" >
+                <table class="table" align="center" width="100" border="0" >
                     <thead>
                         <tr border="1" >
                             
@@ -39,10 +39,10 @@
                             <th>
                                 @Html.DisplayNameFor(model => model.Store)
                             </th>
-                            <th>
+                            <th style="text-align:right">
                                 @Html.DisplayNameFor(model => model.Quantity)
                             </th>
-                            <th align="center">
+                            <th style="text-align:right">
                                 @Html.DisplayNameFor(model => model.Price)                                
                             </th>
                         </tr>
@@ -58,10 +58,10 @@
                         <td>
                             @Html.DisplayFor(modelItem => item.Store.Name)
                         </td>
-                        <td>
+                        <td align="right">
                             @Html.DisplayFor(modelItem => item.Quantity)
                         </td>
-                        <td>
+                        <td align="right">
                             $@Html.DisplayFor(modelItem => item.Price)
                         </td>
                     </tr>
@@ -71,24 +71,10 @@
                         </tr>
                         <tr>
                             <td></td>
-                            <td><label>Products Purchased:</label> </td>
-                            <td>@ViewData["item"]</td>
-                            <td>
+                            <td colspan="2" align="right"><label>Products Purchased:</label> @ViewData["item"]</td>
+                            <td align="right">
                                 <label> Cost: </label>$@ViewData["cost"]
                             </td>
-                            <td>
-                               
-                            </td>
-                            @*<td>
-                                <form asp-action="VerifyCreditCard" method="post">
-                                    @{if (Model.LongCount() == (long)0)
-                                {<input type="submit" hidden="hidden" disabled value="Check out" />}
-                                else
-                                { <input type="submit" value="Check out" /> }
-                                    }
-                                </form>
-
-                            </td>*@
                         </tr>
                     </tbody>
                 </table>

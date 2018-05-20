@@ -3,19 +3,33 @@
 @{
     ViewData["Title"] = "Customer";
 }
+<head>
+    <script>
+function changeIt()
+{
+    var temp = "East Melbourne";
+    $("#mySelect").val(temp);
+}
+    </script>
+</head>
 
 <h2>Products In Stores</h2>
 <form asp-action="Index" class="form-group">
 
     <label> Stores:</label>
-    <select name="store" asp-items="@(new SelectList(Model.Select(s => s.Store.Name).Distinct()))">
-        <option value="">All Stores</option>
-    </select>
+    @Html.DropDownList("store", (IEnumerable<SelectListItem>)ViewBag.StoreName, "All Stores")
     <label> Title:</label>
     <input type="text" value="@ViewData["searchName"]" name="searchName">
     <input type="submit" value="Filter" class="btn btn-success" />
 
 </form>
+@if (Model.Count() == 0)
+{
+    <p>No stock available for current store(s). Try selecting/searching different options or come back later.</p>
+
+}
+else
+{
 <table class="table table-hover table-responsive ">
     <thead>
         <tr>
@@ -26,7 +40,7 @@
                 @Html.DisplayNameFor(model => model.Store)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.StockLevel)
+                Avilable
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Product.Price)
@@ -35,7 +49,8 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+@foreach (var item in Model)
+{
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Product.Name)
@@ -54,10 +69,13 @@
                     <input type="number" min="1" max="@item.StockLevel" value="1" style="width: 40px;" name="Quantity" />
                     <input type="hidden" name="ProductID" value="@item.ProductID" />
                     <input type="hidden" name="StoreID" value="@item.StoreID" />
-                    <input type="submit" value="Add to cart" class="btn btn-primary"/>
+                    <input type="hidden" name="searchName" value="@ViewData["searchName"]" />
+                    <input type="hidden" name="store" value="@ViewData["store"]" />
+                    <input type="submit" value="Add to cart" class="btn btn-primary" />
                 </form>
             </td>
         </tr>
 }
     </tbody>
 </table>
+}
