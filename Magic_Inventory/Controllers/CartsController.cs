@@ -22,7 +22,7 @@ namespace Magic_Inventory.Controllers
             _context = context;
         }
 
-        // GET: Carts
+        // GET: Carts Displays the cat to users
         public async Task<IActionResult> Index(int? cartID,String val)
         {
             ViewData["CardV"] = CreditCardVerified;
@@ -71,6 +71,7 @@ namespace Magic_Inventory.Controllers
             return View(await applicationDbContext.ToListAsync());
         }
 
+        //Using apackage to validate crfedit cards
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult VerifyCreditCard()
@@ -95,6 +96,7 @@ namespace Magic_Inventory.Controllers
                 return View(nameof(VerifyCreditCard)); 
         }
 
+        //will work at the check out. before desplaying the invoice
         private async Task<bool> UpdateCartAndOrderHistoryAsync()
         {
             if (CreditCardVerified)
@@ -124,7 +126,7 @@ namespace Magic_Inventory.Controllers
             return false;
         }
 
-        
+        //Displays receipt of the products bought at this time
         public IActionResult Invoice()
         {
             if (!OrderNumber.Equals(""))
@@ -148,110 +150,14 @@ namespace Magic_Inventory.Controllers
             return NotFound();
         }
 
-       
+        //calls the view which then uses angular and WebApi to fetch data
         public IActionResult OrderHistory()
         {
             @ViewBag.UserName = User.Identity.Name;
             return View();
         }
-
-        // GET: Carts/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var cart = await _context.Cart
-                .Include(c => c.Product)
-                .Include(c => c.Store)
-                .SingleOrDefaultAsync(m => m.CartID == id);
-            if (cart == null)
-            {
-                return NotFound();
-            }
-
-            return View(cart);
-        }
-
-        // GET: Carts/Create
-        public IActionResult Create()
-        {
-            ViewData["ProductID"] = new SelectList(_context.Product, "ProductID", "Name");
-            ViewData["StoreID"] = new SelectList(_context.Store, "StoreID", "StoreID");
-            return View();
-        }
-
-        // POST: Carts/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CartID,UserName,ProductID,StoreID,Quantity,Price,CartEntryDate")] Cart cart)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(cart);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["ProductID"] = new SelectList(_context.Product, "ProductID", "Name", cart.ProductID);
-            ViewData["StoreID"] = new SelectList(_context.Store, "StoreID", "StoreID", cart.StoreID);
-            return View(cart);
-        }
-
-        // GET: Carts/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var cart = await _context.Cart.SingleOrDefaultAsync(m => m.CartID == id);
-            if (cart == null)
-            {
-                return NotFound();
-            }
-            ViewData["ProductID"] = new SelectList(_context.Product, "ProductID", "Name", cart.ProductID);
-            ViewData["StoreID"] = new SelectList(_context.Store, "StoreID", "StoreID", cart.StoreID);
-            return View(cart);
-        }
                 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CartID,UserName,ProductID,StoreID,Quantity,Price,CartEntryDate")] Cart cart)
-        {
-            if (id != cart.CartID)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(cart);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!CartExists(cart.CartID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["ProductID"] = new SelectList(_context.Product, "ProductID", "Name", cart.ProductID);
-            ViewData["StoreID"] = new SelectList(_context.Store, "StoreID", "StoreID", cart.StoreID);
-            return View(cart);
-        }
-
-        // GET: Carts/Delete/5
+        // Displays the page that asks the user to confirm delete
         public async Task<IActionResult> DeleteItem(int? id)
         {
             if (id == null)
@@ -271,7 +177,7 @@ namespace Magic_Inventory.Controllers
             return View(cart);
         }
 
-        // POST: Carts/Delete/5
+        // once confirmed delete the data from database here
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int CartID)
