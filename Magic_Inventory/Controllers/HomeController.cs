@@ -18,14 +18,8 @@ namespace Magic_Inventory.Controllers
             return View();
         }
 
-        public IActionResult About()
-        {
-            ViewData["Message"] = "Your application description page.";
-
-           // ViewData["Message"] = User.Claims;
-            return View();
-        }
-        [Authorize (Roles = "Owner")]
+       
+        [AllowAnonymous]
         public IActionResult Contact()
         {
             ViewData["Message"] = "Your contact page.";

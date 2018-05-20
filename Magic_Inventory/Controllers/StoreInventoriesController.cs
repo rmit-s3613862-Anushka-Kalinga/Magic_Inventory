@@ -32,6 +32,7 @@ namespace Magic_Inventory.Controllers
             return View( await storeInventoryList.ToListAsync());
         }
 
+        // show inventory according to store
         public IActionResult ShowStoreInventory(int? id)
         {
 

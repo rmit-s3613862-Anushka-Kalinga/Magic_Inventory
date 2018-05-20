@@ -21,7 +21,7 @@ namespace Magic_Inventory.Controllers
 
         }
 
-
+        // Show owner Inventory
         public async Task<IActionResult> Index()
         {
             var ownerInventoryList = _context.OwnerInventory.Include(o => o.Product);
@@ -33,16 +33,15 @@ namespace Magic_Inventory.Controllers
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
-            {
-                throw new ArgumentNullException(nameof(id));
-                // return NotFound();
+            {                
+                return NotFound();
             }          
             var ownerInventory = await _context.OwnerInventory.Include(o => o.Product).SingleOrDefaultAsync(m => m.ProductID == id);
             if (ownerInventory == null)
             {
                 return NotFound();
             }
-            // ViewData["ProductID"] = new SelectList(_context.Product, "ProductID", "Name", ownerInventory.ProductID);
+           
             ViewBag.ProductName = ownerInventory.Product.Name;
             return View(ownerInventory);
         }
