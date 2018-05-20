@@ -5,13 +5,18 @@
 }
 <head>
     <script>
-function changeIt()
-{
-    var temp = "East Melbourne";
-    $("#mySelect").val(temp);
-}
+        function changeIt() {
+            var temp = "East Melbourne";
+            $("#mySelect").val(temp);
+        }
+        function addProduct() {
+            document.getElementById("msg").style.display = "block";
+        }
     </script>
 </head>
+<div id="msg" class="alert alert-success"  style="display:none;">
+    <strong>Prodcut(s) Added to the Cart</strong>
+</div>
 
 <h2>Products In Stores</h2>
 <form asp-action="Index" class="form-group">
@@ -30,52 +35,52 @@ function changeIt()
 }
 else
 {
-<table class="table table-hover table-responsive ">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Product)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Store)
-            </th>
-            <th>
-                Avilable
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Product.Price)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model)
-{
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Product.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Store.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.StockLevel)
-            </td>
-            <td>
-                $@Html.DisplayFor(modelItem => item.Product.Price)
-            </td>
-            <td>
-                <form asp-action="AddToCart">
-                    <input type="number" min="1" max="@item.StockLevel" value="1" style="width: 40px;" name="Quantity" />
-                    <input type="hidden" name="ProductID" value="@item.ProductID" />
-                    <input type="hidden" name="StoreID" value="@item.StoreID" />
-                    <input type="hidden" name="searchName" value="@ViewData["searchName"]" />
-                    <input type="hidden" name="store" value="@ViewData["store"]" />
-                    <input type="submit" value="Add to cart" class="btn btn-primary" />
-                </form>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    <table class="table table-hover table-responsive ">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Product)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Store)
+                </th>
+                <th>
+                    Avilable
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Product.Price)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Product.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Store.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.StockLevel)
+                    </td>
+                    <td>
+                        $@Html.DisplayFor(modelItem => item.Product.Price)
+                    </td>
+                    <td>
+                        <form asp-action="AddToCart">
+                            <input type="number" min="1" max="@item.StockLevel" value="1" style="width: 40px;" name="Quantity" />
+                            <input type="hidden" name="ProductID" value="@item.ProductID" />
+                            <input type="hidden" name="StoreID" value="@item.StoreID" />
+                            <input type="hidden" name="searchName" value="@ViewData["searchName"]" />
+                            <input type="hidden" name="store" value="@ViewData["store"]" />
+                            <input type="submit" value="Add to cart" class="btn btn-primary" onclick="addProduct()" />
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 }

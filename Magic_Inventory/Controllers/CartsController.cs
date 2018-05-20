@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Magic_Inventory.Data;
 using Magic_Inventory.Models;
+using CreditCardValidator;
 
 namespace Magic_Inventory.Controllers
 {
@@ -79,16 +80,19 @@ namespace Magic_Inventory.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> VerifyCreditCardNow()
+        public async Task<IActionResult> VerifyCreditCardNow(string cardNumber)
         {
-            if (!CreditCardVerified)
+            //Verify the card using CreditCardValidator 
+            CreditCardDetector detector = new CreditCardDetector(cardNumber);
+
+            if (detector.IsValid())
             {
                 CreditCardVerified = true;
                 bool result = await UpdateCartAndOrderHistoryAsync();
                 return Redirect(nameof(Invoice));
             }
-            else
-                return NotFound();
+                ViewBag.ErrorCard = CreditCardVerified;
+                return View(nameof(VerifyCreditCard)); 
         }
 
         private async Task<bool> UpdateCartAndOrderHistoryAsync()
@@ -120,7 +124,7 @@ namespace Magic_Inventory.Controllers
             return false;
         }
 
-        //[ValidateAntiForgeryToken]
+        
         public IActionResult Invoice()
         {
             if (!OrderNumber.Equals(""))

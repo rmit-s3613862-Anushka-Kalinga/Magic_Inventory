@@ -12,12 +12,7 @@
             -webkit-appearance: none;
             margin: 0;
         }
-    </style>
-    @*<script>
-        var input = document.getElementById('cardNumber');
-        input.oninvalid = function(event) { event.target.setCustomValidity('Username should only contain lowercase letters. e.g. john');
-        }
-    </script>*@
+    </style>   
 </head>
 <div>
     <h3>Credit Card Verification</h3>
@@ -26,9 +21,15 @@
 </div>
 <div>
     <h3>Please enter card number</h3>
+    
+    @if (ViewBag.ErrorCard == false)
+    {
+        <div class="alert alert-danger">
+            <strong>Credit Card Details Wrong!</strong> 
+        </div>
+    }
     <form asp-action="VerifyCreditCardNow" method="post">
-        <input type="text" name="cardNumber" pattern="[0-9]{16}" title="Not a valid Credit Card Number">
-        @*<input type="number" pattern="[0-9]{16,16}" title="Not a valid credit card number" id='cardNumber' name="cardNumber" size="18" value="" />*@
-        <input type="submit" value="Verify" class="btn btn-primary"/>
+        <input type="text" name="cardNumber" pattern="[0-9]{16}" title="Not a valid Credit Card Number">       
+        <input type="submit" value="Verify" class="btn btn-primary" />
     </form>
 </div>

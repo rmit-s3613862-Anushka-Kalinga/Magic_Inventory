@@ -74,7 +74,7 @@ namespace Magic_Inventory.Controllers
                 cartItem.UserName = User.Identity.Name.ToString();
                 cartItem.Price = await _context.Product.Where(c => c.ProductID == (int)ProductID).Select(c => c.Price).SingleOrDefaultAsync();
                 cartItem.CartEntryDate = DateTime.Today;
-                _context.Cart.Add(cartItem);                
+                _context.Cart.Add(cartItem);               
             }
             else
             {
