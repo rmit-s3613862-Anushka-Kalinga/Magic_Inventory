@@ -28,7 +28,7 @@ namespace Magic_Inventory.Controllers
             return View(await ownerInventoryList.ToListAsync());
         }
 
-
+        //test
         // GET: OwnerInventories/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
