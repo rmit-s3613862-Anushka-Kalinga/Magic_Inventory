@@ -21,7 +21,7 @@ namespace Magic_Inventory.Controllers
             _context = context;
         }
 
-        // GET: Customers
+        // Display product list. search. filtering enabled
         public async Task<IActionResult> Index(string searchName,string store)
         {
             ViewData["searchName"] = "";
@@ -39,6 +39,7 @@ namespace Magic_Inventory.Controllers
                 ViewData["searchName"] = searchName;
                 if (!String.IsNullOrEmpty(store))
                 {
+                    //Tricky way to get things done. error free
                     ViewData["store"] = store;
                     var applicationDbContext3 = _context.StoreInventory.Include(s => s.Product).Include(m => m.Store).Where(s => s.Product.Name.Contains(searchName)).Where(h=>h.Store.Name == store).Where(d=>d.StockLevel >0);
                     return View(await applicationDbContext3.ToListAsync());
@@ -67,6 +68,7 @@ namespace Magic_Inventory.Controllers
             var temp = _context.Cart.Where(z => z.UserName == User.Identity.Name.ToString()).Where(c => c.ProductID == (int)ProductID).Where(m => m.StoreID == StoreID).SingleOrDefault();
             if (temp == null)
             {
+                //Updating the tem value
                 var cartItem = new Cart();
                 cartItem.StoreID = (int)StoreID;
                 cartItem.ProductID = (int)ProductID;
@@ -82,6 +84,7 @@ namespace Magic_Inventory.Controllers
             }
             var reduceTemp = _context.StoreInventory.Where(p => p.ProductID == (int)ProductID).Where(m => m.StoreID == (int)StoreID).SingleOrDefault();
             reduceTemp.StockLevel = reduceTemp.StockLevel - (int)Quantity;
+            // Updating the database
             await _context.SaveChangesAsync();
             return RedirectToAction("Index",new { @searchName = searchName,@store = store});
         }

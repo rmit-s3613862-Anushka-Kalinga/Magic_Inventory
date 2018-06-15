@@ -13,16 +13,14 @@ namespace Magic_Inventory.Controllers
     public class HomeController : Controller
     {
         public IActionResult Index()
-        {
-           
+        {           
             return View();
         }
-
        
         [AllowAnonymous]
         public IActionResult Contact()
         {
-            ViewData["Message"] = "Your contact page.";
+            ViewData["Message"] = "Contact page.";
 
             return View();
         }
